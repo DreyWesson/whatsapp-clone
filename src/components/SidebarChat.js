@@ -3,6 +3,8 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import db from "../firebase";
 import "./SidebarChat.css";
+import formatDate from "../time";
+
 function SidebarChat({ id, name, addNewChat }) {
   const [seed, setSeed] = useState("");
   const [messages, setMessages] = useState("");
@@ -28,29 +30,6 @@ function SidebarChat({ id, name, addNewChat }) {
     setSeed((Math.random() * 5000) | 0);
   }, []);
 
-  function formatDate(date, dateType) {
-    var hours = date.getHours();
-    var minutes = date.getMinutes();
-    var ampm = hours >= 12 ? "pm" : "am";
-    hours = hours % 12;
-    hours = hours ? hours : 12; // the hour '0' should be '12'
-    minutes = minutes < 10 ? "0" + minutes : minutes;
-    var strTime = hours + ":" + minutes + " " + ampm;
-
-    if (dateType === "time&date") {
-      return (
-        strTime +
-        " " +
-        (date.getMonth() + 1) +
-        "/" +
-        date.getDate() +
-        "/" +
-        date.getFullYear()
-      );
-    } else {
-      return strTime;
-    }
-  }
   const slotInDate = new Date(
     messages[messages.length - 1]?.timestamp?.toDate()
   );
@@ -66,7 +45,9 @@ function SidebarChat({ id, name, addNewChat }) {
           </div>
         </div>
         <span className="sidebarChat__timestamp">
-          {messages[0]?.message && formatDate(slotInDate, "just time")}
+          {messages[0]?.message
+            ? formatDate(slotInDate, "just time")
+            : "Offline"}
         </span>
       </div>
     </Link>
